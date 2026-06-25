@@ -4,7 +4,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
-from torchsummary import summary
+# from torchsummary import summary
 from torchvision import datasets
 import matplotlib.pyplot as plt
 import cv2
@@ -19,7 +19,7 @@ transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize((0.5,), (0.5,))])
 batch_size = 64
-lr = 1e-3
+lr = 1e-4
 epochs = 10
 in_channel, out_channel = [1, 64, 128], [64, 128, 256]
 kernel_size, stride = [12, 4, 2], [10, 3, 1]
@@ -27,8 +27,8 @@ n_class =  10
 model = CvT(in_channel, out_channel,n_class,kernel_size, stride).to(device)
 
 
-mnist_train = datasets.FashionMNIST(root="./data", train=True, transform=transform)
-mnist_test = datasets.FashionMNIST(root="./data", train=False, transform=transform)
+mnist_train = datasets.FashionMNIST(root="./data", train=True, transform=transform, download=True)
+mnist_test = datasets.FashionMNIST(root="./data", train=False, transform=transform, download=True)
 
 train_loader = DataLoader(mnist_train, batch_size=batch_size, shuffle=True, drop_last=True)
 test_loader = DataLoader(mnist_test, batch_size=batch_size, shuffle=False, drop_last=False)
@@ -69,7 +69,7 @@ correct = 0
 total = 0
 with torch.no_grad():
     for data, target in test_loader:
-        data = data.view(-1, 28*28).to(device)
+        data = data.to(device)
         target = target.to(device)
         output = model(data)
         _, predicted = torch.max(output.data, 1)
@@ -84,4 +84,4 @@ plt.xlabel('Epoch')
 plt.ylabel('Loss')
 plt.title('Training Loss over Epochs')
 plt.legend()
-plt.show()
+plt.savefig('Loss.png',dpi=900)
