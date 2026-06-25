@@ -6,3 +6,5 @@ reference: https://arxiv.org/abs/2103.15808
 torch: 1.6.0
 
 GPU Memory > 8GB
+
+Test accuracy: 89.96%
